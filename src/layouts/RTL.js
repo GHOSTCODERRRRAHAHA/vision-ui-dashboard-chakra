@@ -22,7 +22,6 @@ import { RtlProvider } from "components/RTLProvider/RTLProvider";
 import Configurator from "components/Configurator/Configurator";
 import Footer from "components/Footer/Footer.js";
 // Layout components
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -129,16 +128,6 @@ export default function Dashboard(props) {
             base: "100%",
             xl: "calc(100% - 275px)",
           }}>
-          <Portal>
-            <AdminNavbar
-              onOpen={onOpen}
-              logoText={"VISION UI FREE"}
-              brandText={getActiveRoute(routes)}
-              secondary={getActiveNavbar(routes)}
-              fixed={fixed}
-              {...rest}
-            />
-          </Portal>
           {getRoute() ? (
             <PanelContent>
               <PanelContainer>

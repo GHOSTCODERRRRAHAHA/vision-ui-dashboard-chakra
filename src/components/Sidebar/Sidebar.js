@@ -16,9 +16,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import IconBox from "components/Icons/IconBox";
-import { SimmmpleLogoWhite } from "components/Icons/Icons";
+import { ClarityXLogo } from "components/Icons/Icons";
 import { Separator } from "components/Separator/Separator";
-import { SidebarHelp } from "components/Sidebar/SidebarHelp";
 import PropTypes from "prop-types";
 import React from "react";
 import { NavLink, useLocation } from "react-router-dom";
@@ -54,7 +53,7 @@ function Sidebar(props) {
         var st = {};
         st[prop["state"]] = !state[prop.state];
         return (
-          <>
+          <React.Fragment key={key}>
             <Text
               color={activeColor}
               fontWeight='bold'
@@ -72,11 +71,11 @@ function Sidebar(props) {
                 : prop.name}
             </Text>
             {createLinks(prop.views)}
-          </>
+          </React.Fragment>
         );
       }
       return (
-        <NavLink to={prop.layout + prop.path}>
+        <NavLink to={prop.layout + prop.path} key={key}>
           {activeRoute(prop.layout + prop.path) === "active" ? (
             <Button
               boxSize='initial'
@@ -189,8 +188,8 @@ function Sidebar(props) {
   //  BRAND
   //  Chakra Color Mode
   let sidebarBg =
-    "linear-gradient(111.84deg, rgba(6, 11, 38, 0.94) 59.3%, rgba(26, 31, 55, 0) 100%)";
-  let sidebarRadius = "16px";
+    "linear-gradient(126.97deg, rgba(10, 10, 10, 0.9) 28.26%, rgba(25, 25, 25, 0.8) 91.2%)";
+  let sidebarRadius = "20px";
   let sidebarMargins = "16px 0px 16px 16px";
   var brand = (
     <Box pt={"25px"} mb='12px'>
@@ -204,14 +203,7 @@ function Sidebar(props) {
         justifyContent='center'
         alignItems='center'
         fontSize='11px'>
-        <SimmmpleLogoWhite w='22px' h='22px' me='10px' mt='2px' />
-        <Box
-          bg='linear-gradient(97.89deg, #FFFFFF 70.67%, rgba(117, 122, 140, 0) 108.55%)'
-          bgClip='text'>
-          <Text fontSize='sm' letterSpacing='3px' mt='3px' color='transparent'>
-            {logoText}
-          </Text>
-        </Box>
+        <ClarityXLogo w="150px" h="40px" me='10px' mt='2px' />
       </Link>
       <Separator></Separator>
     </Box>
@@ -223,7 +215,7 @@ function Sidebar(props) {
       <Box display={{ sm: "none", xl: "block" }} position='fixed'>
         <Box
           bg={sidebarBg}
-          backdropFilter='blur(10px)'
+          backdropFilter='blur(20px)'
           transition={variantChange}
           w='260px'
           maxW='260px'
@@ -237,12 +229,17 @@ function Sidebar(props) {
           ps='20px'
           pe='20px'
           m={sidebarMargins}
-          borderRadius={sidebarRadius}>
+          borderRadius={sidebarRadius}
+          border='1px solid rgba(50, 50, 50, 0.2)'
+          boxShadow='0 20px 27px 0 rgba(0, 0, 0, 0.1)'
+          _hover={{
+            boxShadow: '0 22px 35px 0 rgba(0, 0, 0, 0.2)',
+            border: '1px solid rgba(75, 75, 75, 0.3)'
+          }}>
           <Box>{brand}</Box>
           <Stack direction='column' mb='40px'>
             <Box>{links}</Box>
           </Stack>
-          <SidebarHelp></SidebarHelp>
         </Box>
       </Box>
     </Box>
@@ -277,7 +274,7 @@ export function SidebarResponsive(props) {
         var st = {};
         st[prop["state"]] = !state[prop.state];
         return (
-          <>
+          <React.Fragment key={key}>
             <Text
               color={activeColor}
               fontWeight='bold'
@@ -295,11 +292,11 @@ export function SidebarResponsive(props) {
                 : prop.name}
             </Text>
             {createLinks(prop.views)}
-          </>
+          </React.Fragment>
         );
       }
       return (
-        <NavLink to={prop.layout + prop.path}>
+        <NavLink to={prop.layout + prop.path} key={key}>
           {activeRoute(prop.layout + prop.path) === "active" ? (
             <Button
               boxSize='initial'
@@ -418,14 +415,7 @@ export function SidebarResponsive(props) {
         justifyContent='center'
         alignItems='center'
         fontSize='11px'>
-        <SimmmpleLogoWhite w='22px' h='22px' me='10px' mt='2px' />
-        <Box
-          bg='linear-gradient(97.89deg, #FFFFFF 70.67%, rgba(117, 122, 140, 0) 108.55%)'
-          bgClip='text'>
-          <Text fontSize='sm' letterSpacing='3px' mt='3px' color='transparent'>
-            {logoText}
-          </Text>
-        </Box>
+        <ClarityXLogo w="150px" h="40px" me='10px' mt='2px' />
       </Link>
       <Separator></Separator>
     </Box>
@@ -445,7 +435,6 @@ export function SidebarResponsive(props) {
         w='18px'
         h='18px'
         ref={btnRef}
-        colorScheme='teal'
         onClick={onOpen}
       />
       <Drawer
@@ -455,8 +444,8 @@ export function SidebarResponsive(props) {
         finalFocusRef={btnRef}>
         <DrawerOverlay />
         <DrawerContent
-          backdropFilter='blur(10px)'
-          bg='linear-gradient(111.84deg, rgba(6, 11, 38, 0.94) 59.3%, rgba(26, 31, 55, 0) 100%); '
+          backdropFilter='blur(20px)'
+          bg='linear-gradient(126.97deg, rgba(10, 10, 10, 0.9) 28.26%, rgba(25, 25, 25, 0.8) 91.2%)'
           w='250px'
           maxW='250px'
           ms={{
@@ -465,7 +454,9 @@ export function SidebarResponsive(props) {
           my={{
             sm: "16px",
           }}
-          borderRadius='16px'>
+          border='1px solid rgba(50, 50, 50, 0.2)'
+          boxShadow='0 20px 27px 0 rgba(0, 0, 0, 0.1)'
+          borderRadius='20px'>
           <DrawerCloseButton
             color='white'
             _focus={{ boxShadow: "none" }}
@@ -477,7 +468,6 @@ export function SidebarResponsive(props) {
               <Stack direction='column' mb='40px'>
                 <Box>{links}</Box>
               </Stack>
-              <SidebarHelp></SidebarHelp>
             </Box>
           </DrawerBody>
         </DrawerContent>

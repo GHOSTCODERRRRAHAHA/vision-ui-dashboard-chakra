@@ -27,6 +27,15 @@ export default function IconBox(props) {
       alignItems={"center"}
       justifyContent={"center"}
       borderRadius={"12px"}
+      transition="all 0.3s ease"
+      bgGradient="linear(to-br, rgba(49, 56, 96, 0.8), rgba(21, 25, 40, 0.8))"
+      boxShadow="0 4px 12px rgba(0, 0, 0, 0.1)"
+      border="1px solid rgba(255, 255, 255, 0.1)"
+      _hover={{
+        transform: "translateY(-2px)",
+        boxShadow: "0 6px 15px rgba(0, 0, 0, 0.15)",
+        bgGradient: "linear(to-br, rgba(61, 68, 110, 0.8), rgba(28, 31, 46, 0.8))"
+      }}
       {...rest}>
       {children}
     </Flex>

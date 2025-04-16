@@ -20,9 +20,30 @@ import { Box, useStyleConfig } from "@chakra-ui/react";
 function CardHeader(props) {
   const { variant, children, ...rest } = props;
   const styles = useStyleConfig("CardHeader", { variant });
-  // Pass the computed styles into the `__css` prop
   return (
-    <Box __css={styles} {...rest}>
+    <Box __css={{
+      ...styles,
+      display: "flex",
+      flexDirection: "column",
+      p: { base: "20px", md: "24px" },
+      pt: { base: "18px", md: "22px" },
+      pb: { base: "16px", md: "18px" },
+      mb: "10px",
+      borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+      "& h1, & h2, & h3, & h4, & h5, & h6": {
+        fontSize: { base: "1.25rem", md: "1.5rem" },
+        lineHeight: "1.2",
+        fontWeight: "600",
+        color: "white",
+        letterSpacing: "0.5px",
+        marginBottom: "4px"
+      },
+      "& p": {
+        color: "rgba(255, 255, 255, 0.75)",
+        fontSize: "0.875rem",
+        marginBottom: "0"
+      }
+    }} {...rest}>
       {children}
     </Box>
   );

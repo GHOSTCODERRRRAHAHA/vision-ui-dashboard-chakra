@@ -20,18 +20,36 @@ import {
 	Avatar,
 	AvatarBadge,
 	AvatarGroup,
+	Badge,
 	Box,
 	Button,
 	CircularProgress,
 	CircularProgressLabel,
 	DarkMode,
+	Divider,
 	Flex,
 	Grid,
+	HStack,
 	Icon,
 	Image,
 	Link,
-	Switch,
-	Text
+	Progress,
+	SimpleGrid,
+	Spinner,
+	Stat,
+	StatLabel,
+	StatNumber,
+	Tab,
+	TabList,
+	TabPanel,
+	TabPanels,
+	Tabs,
+	Tag,
+	Text,
+	useColorModeValue,
+	VStack,
+	Wrap,
+	WrapItem
 } from '@chakra-ui/react';
 import avatar11 from 'assets/img/avatars/avatar11.png';
 // Images
@@ -53,9 +71,11 @@ import { CarIcon, FulgerIcon, FulgerWhiteIcon } from 'components/Icons/Icons';
 import { Separator } from 'components/Separator/Separator';
 import React from 'react';
 import { BsArrowRight } from 'react-icons/bs';
-import { FaCube, FaFacebook, FaInstagram, FaPencilAlt, FaPenFancy, FaTwitter } from 'react-icons/fa';
+import { FaAward, FaChartLine, FaFacebook, FaInstagram, FaLinkedin, FaPencilAlt, FaPenFancy, FaTwitter, FaUsers, FaShieldAlt, FaThumbsUp } from 'react-icons/fa';
+import { MdSchool, MdVerified, MdWork } from 'react-icons/md';
 // Icons
 import { IoDocumentsSharp } from 'react-icons/io5';
+import { EditIcon, EmailIcon, StarIcon, CheckIcon, WarningIcon, InfoIcon } from '@chakra-ui/icons';
 // Data
 import {
 	lineChartDataProfile1,
@@ -63,565 +83,520 @@ import {
 	lineChartOptionsProfile1,
 	lineChartOptionsProfile2
 } from 'variables/charts';
+// Auth Context
+import { useAuth } from 'utils/auth';
 
-function Profile() {
+export default function Profile() {
+	const textColor = useColorModeValue('gray.700', 'white');
+	const { user, profile, isLoading, signOut } = useAuth();
+	
+	// Sample user data - will be filled with real user data when authenticated
+	const defaultUserData = {
+		name: 'ClarityX User',
+		role: 'Fact-Checker',
+		bio: 'Join the fight against misinformation with ClarityX.',
+		avatar: 'https://via.placeholder.com/150',
+		email: 'user@example.com',
+		joinDate: 'Recent',
+		location: 'Global',
+		expertise: ['General'],
+		badges: [
+			{ name: 'New Member', color: 'blue' }
+		],
+		socialLinks: {
+			twitter: '#',
+			facebook: '#',
+			linkedin: '#'
+		},
+		stats: {
+			accuracy: 0,
+			scansCompleted: 0,
+			upvotesReceived: 0,
+			streak: 0
+		},
+		achievements: [],
+		education: [],
+		experience: [],
+		verificationMetrics: {
+			byCategory: [
+				{ category: 'Politics', count: 0, accuracy: 0 },
+				{ category: 'Health', count: 0, accuracy: 0 },
+				{ category: 'Science', count: 0, accuracy: 0 },
+				{ category: 'Technology', count: 0, accuracy: 0 }
+			],
+			byResult: [
+				{ name: 'True', count: 0, percentage: 0 },
+				{ name: 'False', count: 0, percentage: 0 },
+				{ name: 'Misleading', count: 0, percentage: 0 }
+			]
+		},
+		membership: {
+			type: 'Free',
+			since: 'Just joined',
+			features: ['Basic fact-checking', 'Limited scans per day']
+		}
+	};
+	
+	// Merge real user data with default data, ensuring all properties exist
+	const userData = profile && user ? {
+		...defaultUserData,
+		name: user.name || defaultUserData.name,
+		email: user.email || defaultUserData.email,
+		avatar: user.avatar || defaultUserData.avatar,
+		// Add membership info from the authenticated user
+		membership: {
+			type: user.membership?.type || 'Free',
+			since: user.membership?.since || (new Date()).toLocaleDateString(),
+			features: user.membership?.features || defaultUserData.membership.features
+		},
+		// Ensure verification metrics always exist
+		verificationMetrics: {
+			byCategory: user.verificationMetrics?.byCategory || defaultUserData.verificationMetrics.byCategory,
+			byResult: user.verificationMetrics?.byResult || defaultUserData.verificationMetrics.byResult
+		}
+	} : defaultUserData;
+
+	// Handle logout
+	const handleLogout = async () => {
+		try {
+			await signOut();
+			// Redirect to login page
+			window.location.href = '/auth/login';
+		} catch (error) {
+			console.error('Logout failed:', error);
+		}
+	};
+
+	if (isLoading) {
+		return (
+			<Flex justify="center" align="center" h="70vh">
+				<VStack spacing={4}>
+					<Spinner size="xl" color="brand.200" thickness="4px" />
+					<Text>Loading your profile...</Text>
+				</VStack>
+			</Flex>
+		);
+	}
+
 	return (
-		<Flex direction='column' mt={{ sm: '25px', md: '0px' }}>
-			<Box
-				mb={{ sm: '24px', md: '50px', xl: '20px' }}
-				borderRadius='15px'
-				px='0px'
-				display='flex'
-				flexDirection='column'
-				justifyContent='center'
-				align='center'>
-				{/* Header */}
-				<Card
-					direction={{ sm: 'column', md: 'row' }}
-					mx='auto'
-					maxH='330px'
-					w={{ sm: '90%', xl: '100%' }}
-					justifyContent={{ sm: 'center', md: 'space-between' }}
-					align='center'
-					p='24px'
-					borderRadius='20px'
-					mt='100px'>
-					<Flex align='center' direction={{ sm: 'column', md: 'row' }}>
-						<Flex
-							align='center'
-							mb={{ sm: '10px', md: '0px' }}
-							direction={{ sm: 'column', md: 'row' }}
-							w={{ sm: '100%' }}
-							textAlign={{ sm: 'center', md: 'start' }}>
-							<Avatar me={{ md: '22px' }} src={avatar11} w='80px' h='80px' borderRadius='15px'>
-								<AvatarBadge
-									cursor='pointer'
-									borderRadius='8px'
-									border='transparent'
-									bg='linear-gradient(138.78deg, rgba(6, 11, 40, 0.94) 17.44%, rgba(10, 14, 35, 0.49) 93.55%, rgba(10, 14, 35, 0.69) 93.55%)'
-									boxSize='26px'
-									backdropFilter='blur(120px)'>
-									<Icon h='12px' w='12px' color='#fff' as={FaPencilAlt} />
-								</AvatarBadge>
+		<Flex flexDirection='column' pt={{ base: '120px', md: '75px' }}>
+			{/* Profile Header */}
+			<Card mb='24px'>
+				<CardBody>
+					<Flex direction={{ base: 'column', md: 'row' }} align='center'>
+						<Box position='relative' me={{ base: 0, md: 6 }} mb={{ base: 4, md: 0 }}>
+							<Avatar 
+								size='2xl' 
+								src={userData.avatar}
+								name={userData.name}
+								borderRadius='12px'
+								boxShadow='lg'
+							>
+								{profile && 
+									<AvatarBadge
+										borderRadius='8px'
+										border='2px solid'
+										borderColor='navy.700'
+										bg='green.400'
+										boxSize='28px'
+									>
+										<Icon h='14px' w='14px' color='white' as={CheckIcon} />
+									</AvatarBadge>
+								}
 							</Avatar>
-							<Flex direction='column' maxWidth='100%' my={{ sm: '14px' }}>
-								<Text
-									fontSize={{ sm: 'lg', lg: 'xl' }}
-									color='#fff'
-									fontWeight='bold'
-									ms={{ sm: '8px', md: '0px' }}>
-									Mark Johnson
-								</Text>
-								<Text fontSize={{ sm: 'sm', md: 'md' }} color='gray.400'>
-									mark@simmmple.com
-								</Text>
-							</Flex>
-						</Flex>
-						<Flex direction={{ sm: 'column', lg: 'row' }} w={{ sm: '100%', md: '50%', lg: 'auto' }}>
-							<Button
-								borderRadius='12px'
-								bg='brand.200'
-								_hover={{ opacity: '0.8' }}
-								_active={{ opacity: '0.9' }}
-								me={{ base: 'none', lg: '20px' }}
-								leftIcon={<Icon color='white' as={FaCube} me='6px' />}>
-								<Text fontSize='xs' color='#fff' fontWeight='bold'>
-									OVERVIEW
-								</Text>
+						</Box>
+						
+						<VStack align={{ base: 'center', md: 'start' }} spacing={1} flex={1}>
+							<Text fontSize='2xl' fontWeight='bold'>{userData.name}</Text>
+							{profile && (
+								<HStack>
+									<Icon as={MdVerified} color='green.400' boxSize={5} />
+									<Text color='gray.400'>Verified ClarityX User</Text>
+								</HStack>
+							)}
+							<Text fontSize='sm' color='gray.400' maxW='600px' align={{ base: 'center', md: 'left' }}>
+								{userData.bio}
+							</Text>
+							<HStack mt={2}>
+								<Icon as={EmailIcon} color='gray.400' />
+								<Text color='gray.400'>{userData.email}</Text>
+							</HStack>
+							{profile && (
+								<Wrap mt={2} spacing={2}>
+									{userData.badges.map((badge, i) => (
+										<WrapItem key={i}>
+											<Badge colorScheme={badge.color} px={2} py={1} borderRadius='full'>
+												{badge.name}
+											</Badge>
+										</WrapItem>
+									))}
+								</Wrap>
+							)}
+						</VStack>
+						
+						{profile && (
+							<HStack spacing={4} mt={{ base: 4, md: 0 }}>
+								<IconBox
+									as='a'
+									href={userData.socialLinks.twitter}
+									target='_blank'
+									h='40px'
+									w='40px'
+									bg='rgba(255, 255, 255, 0.1)'
+									icon={<FaTwitter color='#1DA1F2' size='16px' />}
+								/>
+								<IconBox
+									as='a'
+									href={userData.socialLinks.facebook}
+									target='_blank'
+									h='40px'
+									w='40px'
+									bg='rgba(255, 255, 255, 0.1)'
+									icon={<FaFacebook color='#4267B2' size='16px' />}
+								/>
+								<IconBox
+									as='a'
+									href={userData.socialLinks.linkedin}
+									target='_blank'
+									h='40px'
+									w='40px'
+									bg='rgba(255, 255, 255, 0.1)'
+									icon={<FaLinkedin color='#0e76a8' size='16px' />}
+								/>
+							</HStack>
+						)}
+						{profile && (
+							<Button 
+								onClick={handleLogout}
+								colorScheme="red"
+								variant="outline"
+								size="sm"
+								ml={4}
+							>
+								Logout
 							</Button>
-							<Button
-								borderRadius='12px'
-								bg='transparent'
-								_hover={{
-									bg: 'brand.200'
-								}}
-								_active={{
-									bg: 'brand.200'
-								}}
-								me={{ base: 'none', lg: '20px' }}
-								leftIcon={<Icon color='white' as={IoDocumentsSharp} me='6px' />}>
-								<Text fontSize='xs' color='#fff' fontWeight='bold'>
-									TEAMS
-								</Text>
-							</Button>
-							<Button
-								borderRadius='12px'
-								bg='transparent'
-								_hover={{
-									bg: 'brand.200'
-								}}
-								_active={{
-									bg: 'brand.200'
-								}}
-								leftIcon={<Icon color='white' as={FaPenFancy} me='6px' />}>
-								<Text fontSize='xs' color='#fff' fontWeight='bold'>
-									PROJECTS
-								</Text>
-							</Button>
-						</Flex>
+						)}
 					</Flex>
-				</Card>
-			</Box>
-			<Grid
-				templateColumns={{
-					sm: '1fr',
-					xl: 'repeat(2, 1fr)',
-					'2xl': '1fr 2fr 1.2fr'
-				}}
-				gap='22px'
-				mb='24px'>
-				{/* Welcome Card */}
-				<Card
-					bgImage={bgProfile}
-					bgSize='cover'
-					maxW={{ sm: '325px', md: '725px', lg: '980px' }}
-					h={{ sm: '270px', lg: '350px', xl: '410px' }}
-					gridArea={{ xl: '1 / 1 / 2 / 2', '2xl': 'auto' }}>
-					<Flex direction='column' h='100%'>
-						<Text color='#fff' fontSize='30px' fontWeight='bold' mb='3px'>
-							Welcome back!
+				</CardBody>
+			</Card>
+			
+			{/* Membership Card */}
+			<Card mb='24px'>
+				<CardHeader mb='12px'>
+					<Flex justify='space-between' align='center'>
+						<Text fontSize='lg' fontWeight='bold'>
+							Membership Details
 						</Text>
-						<Text color='#fff' fontSize='sm' mb='auto'>
-							Nice to see you, Mark Johnson!
-						</Text>
-						<Button alignSelf='flex-start' variant='no-hover' bg='transparent' p='0px'>
-							<Text
-								fontSize='xs'
-								color='#fff'
-								me='5px'
-								cursor='pointer'
-								transition='all .3s ease'
-								_hover={{ me: '6px' }}>
-								Tab to record
-							</Text>
-							<Icon
-								as={BsArrowRight}
-								w='13px'
-								h='13px'
-								color='#fff'
-								transition='all .3s ease'
-								cursor='pointer'
-								_hover={{ transform: 'translateX(20%)' }}
-							/>
-						</Button>
+						<Badge 
+							colorScheme={userData.membership.type === 'Premium' ? 'blue' : 'gray'} 
+							px={3} 
+							py={1} 
+							borderRadius='full'
+						>
+							{userData.membership.type} Account
+						</Badge>
 					</Flex>
-				</Card>
-				{/* Car Informations */}
-				<Card
-					p='16px'
-					maxH={{ lg: '410px' }}
-					maxW={{ sm: '325px', md: '725px', lg: '980px', xl: '100%' }}
-					gridArea={{ xl: '2 / 1 / 3 / 3', '2xl': 'auto' }}>
-					<CardHeader p='12px 5px' mb='12px'>
-						<Flex direction='column'>
-							<Text fontSize='lg' color='#fff' fontWeight='bold' mb='6px'>
-								Car Informations
-							</Text>
-							<Text fontSize='sm' color='gray.400'>
-								Hello, Mark Johnson! Your Car is ready.
-							</Text>
+				</CardHeader>
+				<CardBody>
+					<VStack align='stretch' spacing={4}>
+						<Flex justify='space-between'>
+							<Text color='gray.400'>Member Since</Text>
+							<Text>{userData.membership.since}</Text>
 						</Flex>
-					</CardHeader>
-					<CardBody w='100%'>
-						<Flex w='100%' direction={{ sm: 'column', md: 'row' }}>
-							<Flex
-								direction='column'
-								align='center'
-								me={{ md: '16px', lg: '50px' }}
-								mb={{ sm: '12px', md: '0px' }}>
-								<CircularProgress
-									size={200}
-									value={68}
-									thickness={6}
-									color='green.400'
-									variant='vision'>
-									<CircularProgressLabel>
-										<Flex direction='column' justify='center' align='center'>
-											<LightningIcon w='14px' h='22px' mb='8px' />
-											<Text color='#fff' fontSize='36px' fontWeight='bold' mb='6px'>
-												68%
-											</Text>
-											<Text color='gray.400' fontSize='sm'>
-												Current load
-											</Text>
-										</Flex>
-									</CircularProgressLabel>
-								</CircularProgress>
-								<Flex direction='column' mt='18px' align='center'>
-									<Text color='#fff' fontSize='lg' fontWeight='bold' mb='2px'>
-										0h 58 min
-									</Text>
-									<Text color='gray.500' fontSize='sm'>
-										Time to full charge
-									</Text>
-								</Flex>
-							</Flex>
-							<Grid
-								templateColumns={{ sm: '1fr', md: 'repeat(2, 1fr)' }}
-								gap='24px'
-								w='100%'
-								alignSelf='flex-start'>
-								<Flex
-									align='center'
-									p='18px'
-									justify='space-between'
-									bg='linear-gradient(126.97deg, rgba(6, 11, 38, 0.74) 28.26%, rgba(26, 31, 55, 0.5) 91.2%)'
-									borderRadius='20px'>
-									<Flex direction='column' me='auto'>
-										<Text fontSize='xs' color='gray.400' mb='3px'>
-											Battery Health
-										</Text>
-										<Text color='#fff' fontSize='22px' fontWeight='bold'>
-											76%
-										</Text>
-									</Flex>
-									<IconBox bg='brand.200' w='56px' h='56px' direction='column'>
-										<CarIcon w='28px' h='28px' />
-										<FulgerWhiteIcon w='8px' h='11px' transform='rotate(90deg)' />
-									</IconBox>
-								</Flex>
-								<Flex
-									align='center'
-									p='18px'
-									pe='0px'
-									justify='space-between'
-									bg='linear-gradient(126.97deg, rgba(6, 11, 38, 0.74) 28.26%, rgba(26, 31, 55, 0.5) 91.2%)'
-									borderRadius='20px'>
-									<Flex direction='column' me='auto'>
-										<Text fontSize='xs' color='gray.400' mb='3px'>
-											Efficiency
-										</Text>
-										<Text color='#fff' fontSize='22px' fontWeight='bold'>
-											+20%
-										</Text>
-									</Flex>
-									<Box maxH='75px'>
-										<LineChart
-											lineChartData={lineChartDataProfile1}
-											lineChartOptions={lineChartOptionsProfile1}
-										/>
-									</Box>
-								</Flex>
-								<Flex
-									align='center'
-									p='18px'
-									justify='space-between'
-									bg='linear-gradient(126.97deg, rgba(6, 11, 38, 0.74) 28.26%, rgba(26, 31, 55, 0.5) 91.2%)'
-									borderRadius='20px'>
-									<Flex direction='column' me='auto'>
-										<Text fontSize='xs' color='gray.400' mb='3px'>
-											Consumption
-										</Text>
-										<Text color='#fff' fontSize='22px' fontWeight='bold'>
-											163W/km
-										</Text>
-									</Flex>
-									<IconBox bg='brand.200' w='56px' h='56px'>
-										<FulgerWhiteIcon w='24px' h='24px' color='#fff' />
-									</IconBox>
-								</Flex>
-								<Flex
-									align='center'
-									p='18px'
-									pe='0px'
-									justify='space-between'
-									bg='linear-gradient(126.97deg, rgba(6, 11, 38, 0.74) 28.26%, rgba(26, 31, 55, 0.5) 91.2%)'
-									borderRadius='20px'>
-									<Flex direction='column' me='auto'>
-										<Text fontSize='xs' color='gray.400' mb='3px'>
-											This Week
-										</Text>
-										<Text color='#fff' fontSize='22px' fontWeight='bold'>
-											1.342km
-										</Text>
-									</Flex>
-									<Box maxH='75px'>
-										<LineChart
-											lineChartData={lineChartDataProfile2}
-											lineChartOptions={lineChartOptionsProfile2}
-										/>
-									</Box>
-								</Flex>
-							</Grid>
-						</Flex>
-					</CardBody>
-				</Card>
-				{/* Profile Information */}
-				<Card
-					p='16px'
-					maxH={{ md: '410px' }}
-					maxW={{ sm: '325px', md: '725px', lg: '980px' }}
-					gridArea={{ xl: '1 / 2 / 2 / 3', '2xl': 'auto' }}>
-					<CardHeader p='12px 5px' mb='12px'>
-						<Text fontSize='lg' color='#fff' fontWeight='bold'>
-							Profile Information
-						</Text>
-					</CardHeader>
-					<CardBody px='5px'>
-						<Flex direction='column'>
-							<Text fontSize='sm' color={'gray.400'} fontWeight='400' mb='15px'>
-								Hi, I’m Mark Johnson, Decisions: If you can’t decide, the answer is no. If two equally
-								difficult paths, choose the one more painful in the short term (pain avoidance is
-								creating an illusion of equality).
-							</Text>
-							<Separator mb='30px' />
-							<Flex align='center' mb='18px'>
-								<Text fontSize='sm' color={'gray.400'} me='10px'>
-									Full Name:{' '}
-								</Text>
-								<Text fontSize='sm' color='#fff' fontWeight='400'>
-									Mark Johnson
-								</Text>
-							</Flex>
-							<Flex align='center' mb='18px'>
-								<Text fontSize='sm' color={'gray.400'} me='10px'>
-									Mobile:{' '}
-								</Text>
-								<Text fontSize='sm' color='#fff' fontWeight='400'>
-									(44) 123 1234 123
-								</Text>
-							</Flex>
-							<Flex align='center' mb='18px'>
-								<Text fontSize='sm' color={'gray.400'} me='10px'>
-									Email:{' '}
-								</Text>
-								<Text fontSize='sm' color='#fff' fontWeight='400'>
-									mark@simmmple.com
-								</Text>
-							</Flex>
-							<Flex align='center' mb='18px'>
-								<Text fontSize='sm' color={'gray.400'} me='10px'>
-									Location:{' '}
-								</Text>
-								<Text fontSize='sm' color='#fff' fontWeight='400'>
-									United States
-								</Text>
-							</Flex>
-							<Flex align='center' mb='18px'>
-								<Text fontSize='sm' color={'gray.400'} me='10px'>
-									Social Media:{' '}
-								</Text>
-								<Flex>
-									<Link
-										href='#'
-										color='teal.300'
+						<Divider />
+						<Text fontWeight='bold'>Features</Text>
+						{userData.membership.features.map((feature, index) => (
+							<HStack key={index} spacing={3}>
+								<Icon as={CheckIcon} color='green.400' />
+								<Text>{feature}</Text>
+							</HStack>
+						))}
+						{!profile && (
+							<Button 
+								colorScheme='teal' 
+								onClick={() => window.location.href = '/auth/login'}
+								mt={2}
+							>
+								Sign In to Access Your Membership
+							</Button>
+						)}
+					</VStack>
+				</CardBody>
+			</Card>
+			
+			{/* Stats Cards (only show if authenticated) */}
+			{profile && (
+				<SimpleGrid columns={{ base: 1, md: 2, xl: 4 }} spacing='20px' mb='20px'>
+					<Card>
+						<CardBody p={4}>
+							<Flex direction='column' align='center'>
+								<Box position='relative' mb={2}>
+									<CircularProgress 
+										value={userData.stats.accuracy} 
+										color='green.400' 
+										size='100px' 
+										thickness='8px'
+									/>
+									<Text 
+										position='absolute' 
+										top='50%' 
+										left='50%' 
+										transform='translate(-50%, -50%)'
 										fontSize='lg'
-										me='10px'
-										_hover={{ color: 'teal.300' }}>
-										<Icon color='white' as={FaFacebook} w='12px' h='12px' />
-									</Link>
-									<Link
-										href='#'
-										color='teal.300'
-										fontSize='lg'
-										me='10px'
-										_hover={{ color: 'teal.300' }}>
-										<Icon color='white' as={FaInstagram} w='12px' h='12px' />
-									</Link>
-									<Link
-										href='#'
-										color='teal.300'
-										fontSize='lg'
-										me='10px'
-										_hover={{ color: 'teal.300' }}>
-										<Icon color='white' as={FaTwitter} w='12px' h='12px' />
-									</Link>
-								</Flex>
-							</Flex>
-						</Flex>
-					</CardBody>
-				</Card>
-			</Grid>
-			<Grid templateColumns={{ sm: '1fr', xl: '1fr 3fr' }} gap='20px'>
-				<DarkMode>
-					{/* Platform Settings */}
-					<Card p='16px' gridArea={{ xl: '1 / 1 / 2 / 2' }}>
-						<CardHeader p='12px 5px' mb='12px'>
-							<Text fontSize='lg' color='#fff' fontWeight='bold'>
-								Platform Settings
-							</Text>
-						</CardHeader>
-						<CardBody px='5px'>
-							<Flex direction='column'>
-								<Text fontSize='10px' color={'gray.400'} mb='20px'>
-									ACCOUNT
-								</Text>
-								<Flex align='center' mb='20px'>
-									<Switch variant='brand' colorScheme='brand' me='10px' defaultChecked />
-									<Text noOfLines={1} fontSize='sm' color={'gray.400'} fontWeight='400'>
-										Email me when someone follows me
+										fontWeight='bold'
+									>
+										{userData.stats.accuracy}%
 									</Text>
-								</Flex>
-								<Flex align='center' mb='20px'>
-									<Switch colorScheme='brand' me='10px' />
-									<Text noOfLines={1} fontSize='sm' color={'gray.400'} fontWeight='400'>
-										Email me when someone answers on my post
-									</Text>
-								</Flex>
-								<Flex align='center' mb='20px'>
-									<Switch colorScheme='brand' me='10px' defaultChecked />
-									<Text noOfLines={1} fontSize='sm' color={'gray.400'} fontWeight='400'>
-										Email me when someone mentions me
-									</Text>
-								</Flex>
-								<Text fontSize='10px' color={'gray.400'} m='6px 0px 20px 0px'>
-									APPLICATION
-								</Text>
-								<Flex align='center' mb='20px'>
-									<Switch colorScheme='brand' me='10px' />
-									<Text noOfLines={1} fontSize='sm' color={'gray.400'} fontWeight='400'>
-										New launches and projects
-									</Text>
-								</Flex>
-								<Flex align='center' mb='20px'>
-									<Switch colorScheme='brand' me='10px' defaultChecked />
-									<Text noOfLines={1} fontSize='sm' color={'gray.400'} fontWeight='400'>
-										Monthly product changes
-									</Text>
-								</Flex>
-								<Flex align='center' mb='20px'>
-									<Switch colorScheme='brand' me='10px' />
-									<Text noOfLines={1} fontSize='sm' color={'gray.400'} fontWeight='400'>
-										Subscribe to newsletter
-									</Text>
-								</Flex>
-								<Flex align='center' mb='20px'>
-									<Switch colorScheme='brand' me='10px' defaultChecked />
-									<Text noOfLines={1} fontSize='sm' color={'gray.400'} fontWeight='400'>
-										Receive mails weekly
-									</Text>
-								</Flex>
+								</Box>
+								<Text fontWeight='bold'>Verification Accuracy</Text>
 							</Flex>
 						</CardBody>
 					</Card>
-				</DarkMode>
-				{/* Projects */}
-				<Card gridArea={{ xl: '1 /2 /2/ 5' }} p='16px'>
-					<CardHeader p='12px 5px' mb='12px'>
-						<Flex direction='column'>
-							<Text fontSize='lg' color='#fff' fontWeight='bold'>
-								Projects
+					
+					<Card>
+						<CardBody p={4}>
+							<Flex align='center' justify='space-between'>
+								<Flex direction='column'>
+									<Text color='gray.400' fontSize='sm'>Scans Completed</Text>
+									<Text fontSize='2xl' fontWeight='bold'>{userData.stats.scansCompleted}</Text>
+								</Flex>
+								<Icon as={FaShieldAlt} boxSize={8} color='blue.400' />
+							</Flex>
+						</CardBody>
+					</Card>
+					
+					<Card>
+						<CardBody p={4}>
+							<Flex align='center' justify='space-between'>
+								<Flex direction='column'>
+									<Text color='gray.400' fontSize='sm'>Upvotes Received</Text>
+									<Text fontSize='2xl' fontWeight='bold'>{userData.stats.upvotesReceived}</Text>
+								</Flex>
+								<Icon as={FaThumbsUp} boxSize={8} color='green.400' />
+							</Flex>
+						</CardBody>
+					</Card>
+					
+					<Card>
+						<CardBody p={4}>
+							<Flex align='center' justify='space-between'>
+								<Flex direction='column'>
+									<Text color='gray.400' fontSize='sm'>Daily Streak</Text>
+									<Text fontSize='2xl' fontWeight='bold'>{userData.stats.streak} days</Text>
+								</Flex>
+								<Icon as={FaAward} boxSize={8} color='orange.400' />
+							</Flex>
+						</CardBody>
+					</Card>
+				</SimpleGrid>
+			)}
+			
+			{/* Not authenticated message */}
+			{!profile && (
+				<Card mb='20px'>
+					<CardBody>
+						<VStack spacing={4} align='center' py={8}>
+							<Icon as={FaUsers} boxSize={12} color='brand.200' />
+							<Text fontSize='xl' fontWeight='bold'>Join the ClarityX Community</Text>
+							<Text textAlign='center' maxW='600px'>
+								Sign in to access your full profile, track your fact-checking progress, and unlock premium features.
 							</Text>
-							<Text fontSize='sm' color={'gray.400'} fontWeight='400'>
-								Architects design houses
-							</Text>
-						</Flex>
-					</CardHeader>
-					<CardBody px='5px'>
-						<Grid
-							templateColumns={{
-								sm: '1fr',
-								md: '1fr 1fr',
-								xl: 'repeat(3, 1fr)'
-							}}
-							templateRows={{
-								sm: '1fr 1fr 1fr auto',
-								md: '1fr 1fr',
-								xl: '1fr'
-							}}
-							gap='24px'>
-							<Flex direction='column'>
-								<Box mb='20px' position='relative' borderRadius='20px'>
-									<Image src={ProjectImage1} borderRadius='20px' />
-								</Box>
-								<Flex direction='column'>
-									<Text fontSize='10px' color={'gray.400'} mb='10px'>
-										Project #1
-									</Text>
-									<Text fontSize='xl' color='#fff' fontWeight='bold' mb='10px'>
-										Modern
-									</Text>
-									<Text fontSize='sm' color={'gray.400'} fontWeight='400' mb='20px'>
-										As Uber works through a huge amount of internal management turmoil.
-									</Text>
-									<Flex justifyContent='space-between' mt='auto'>
-										<Button
-											variant='outlineWhite'
-											minW='110px'
-											h='36px'
-											fontSize='10px'
-											px='1.5rem'>
-											VIEW ALL
-										</Button>
-										<AvatarGroup size='xs'>
-											<Avatar borderColor='#121241' name='Ryan Florence' src={avatar6} />
-											<Avatar borderColor='#121241' name='Segun Adebayo' src={avatar2} />
-											<Avatar borderColor='#121241' name='Kent Dodds' src={avatar3} />
-											<Avatar borderColor='#121241' name='Prosper Otemuyiwa' src={avatar4} />
-										</AvatarGroup>
-									</Flex>
-								</Flex>
-							</Flex>
-							<Flex direction='column'>
-								<Box mb='20px' position='relative' borderRadius='20px'>
-									<Image src={ProjectImage2} borderRadius='20px' />
-								</Box>
-								<Flex direction='column'>
-									<Text fontSize='10px' color={'gray.400'} mb='10px'>
-										Project #2
-									</Text>
-									<Text fontSize='xl' color='#fff' fontWeight='bold' mb='10px'>
-										Scandinavian
-									</Text>
-									<Text fontSize='sm' color={'gray.400'} mb='20px'>
-										Music is something that every person has his or her own specific opinion about.
-									</Text>
-									<Flex justifyContent='space-between' mt='auto'>
-										<Button
-											variant='outlineWhite'
-											minW='110px'
-											h='36px'
-											fontSize='10px'
-											px='1.5rem'>
-											VIEW ALL
-										</Button>
-										<AvatarGroup size='xs'>
-											<Avatar borderColor='#121241' name='Ryan Florence' src={avatar6} />
-											<Avatar borderColor='#121241' name='Segun Adebayo' src={avatar2} />
-											<Avatar borderColor='#121241' name='Kent Dodds' src={avatar3} />
-											<Avatar borderColor='#121241' name='Prosper Otemuyiwa' src={avatar4} />
-										</AvatarGroup>
-									</Flex>
-								</Flex>
-							</Flex>
-							<Flex direction='column' h='100%'>
-								<Box mb='20px' position='relative' borderRadius='20px'>
-									<Image src={ProjectImage3} borderRadius='20px' />
-								</Box>
-								<Flex direction='column'>
-									<Text fontSize='10px' color={'gray.400'} mb='10px'>
-										Project #3
-									</Text>
-									<Text fontSize='xl' color='#fff' fontWeight='bold' mb='10px'>
-										Minimalist
-									</Text>
-									<Text fontSize='sm' color={'gray.400'} fontWeight='400' mb='20px'>
-										Different people have different taste, especially various types of music.
-									</Text>
-									<Flex justifyContent='space-between' mt='auto'>
-										<Button
-											variant='outlineWhite'
-											minW='110px'
-											h='36px'
-											fontSize='10px'
-											px='1.5rem'>
-											VIEW ALL
-										</Button>
-										<AvatarGroup size='xs'>
-											<Avatar borderColor='#121241' name='Ryan Florence' src={avatar6} />
-											<Avatar borderColor='#121241' name='Segun Adebayo' src={avatar2} />
-											<Avatar borderColor='#121241' name='Kent Dodds' src={avatar3} />
-											<Avatar borderColor='#121241' name='Prosper Otemuyiwa' src={avatar4} />
-										</AvatarGroup>
-									</Flex>
-								</Flex>
-							</Flex>
-						</Grid>
+							<Button 
+								colorScheme='teal' 
+								size='lg'
+								onClick={() => window.location.href = '/auth/login'}
+								mt={2}
+							>
+								Sign In Now
+							</Button>
+						</VStack>
 					</CardBody>
+				</Card>
+			)}
+			
+			<Grid templateColumns={{ base: '1fr', lg: '1fr 2fr' }} gap='20px' mb='20px'>
+				{/* Profile Info */}
+				<Card>
+					<CardHeader mb='12px'>
+						<Text fontSize='lg' fontWeight='bold'>
+							Profile Information
+						</Text>
+					</CardHeader>
+					<CardBody>
+						<VStack spacing={4} align='stretch'>
+							<HStack>
+								<Text color='gray.400' minW='120px'>Full Name:</Text>
+								<Text fontWeight='500'>{userData.name}</Text>
+							</HStack>
+							<HStack>
+								<Text color='gray.400' minW='120px'>Email:</Text>
+								<Text fontWeight='500'>{userData.email}</Text>
+							</HStack>
+							<HStack>
+								<Text color='gray.400' minW='120px'>Location:</Text>
+								<Text fontWeight='500'>{userData.location}</Text>
+							</HStack>
+							<HStack>
+								<Text color='gray.400' minW='120px'>Joined:</Text>
+								<Text fontWeight='500'>{userData.joinDate}</Text>
+							</HStack>
+							<HStack align='flex-start'>
+								<Text color='gray.400' minW='120px'>Expertise:</Text>
+								<Wrap>
+									{userData.expertise.map((area, i) => (
+										<WrapItem key={i}>
+											<Tag size='md' variant='subtle' colorScheme={
+												area === 'Health' ? 'red' : 
+												area === 'Science' ? 'green' : 
+												'purple'
+											}>
+												{area}
+											</Tag>
+										</WrapItem>
+									))}
+								</Wrap>
+							</HStack>
+							
+							<Divider />
+							
+							<VStack align='stretch' spacing={4}>
+								<Text fontWeight='bold'>Education</Text>
+								{userData.education.map((edu, i) => (
+									<HStack key={i}>
+										<Icon as={MdSchool} color='brand.300' boxSize={5} />
+										<VStack align='start' spacing={0}>
+											<Text fontWeight='500'>{edu.degree}</Text>
+											<Text fontSize='sm' color='gray.400'>{edu.institution}, {edu.year}</Text>
+										</VStack>
+									</HStack>
+								))}
+							</VStack>
+							
+							<Divider />
+							
+							<VStack align='stretch' spacing={4}>
+								<Text fontWeight='bold'>Experience</Text>
+								{userData.experience.map((exp, i) => (
+									<HStack key={i}>
+										<Icon as={MdWork} color='brand.300' boxSize={5} />
+										<VStack align='start' spacing={0}>
+											<Text fontWeight='500'>{exp.role}</Text>
+											<Text fontSize='sm' color='gray.400'>{exp.company}, {exp.period}</Text>
+										</VStack>
+									</HStack>
+								))}
+							</VStack>
+							
+							<Button colorScheme='brand' leftIcon={<EditIcon />}>
+								Edit Profile
+							</Button>
+						</VStack>
+					</CardBody>
+				</Card>
+				
+				{/* Verification Statistics */}
+				<Card>
+					<CardHeader mb='12px'>
+						<Tabs variant='soft-rounded' colorScheme='brand'>
+							<TabList mb='16px'>
+								<Tab>Verification Stats</Tab>
+								<Tab>Achievements</Tab>
+							</TabList>
+							
+							<TabPanels>
+								<TabPanel px={0}>
+									<VStack spacing={6} align='stretch'>
+										<Text fontWeight='bold'>Verification by Category</Text>
+										{userData.verificationMetrics.byCategory.map((item, index) => (
+											<Box key={index}>
+												<Flex justify='space-between' mb={1}>
+													<HStack>
+														<Text fontSize='sm'>{item.category}</Text>
+														<Badge colorScheme={
+															item.category === 'Health' ? 'red' :
+															item.category === 'Politics' ? 'blue' :
+															item.category === 'Science' ? 'green' : 'purple'
+														}>
+															{item.count}
+														</Badge>
+													</HStack>
+													<Text fontSize='sm' fontWeight='bold'>{item.accuracy}% accuracy</Text>
+												</Flex>
+												<Progress 
+													value={item.accuracy} 
+													colorScheme={
+														item.category === 'Health' ? 'red' :
+														item.category === 'Politics' ? 'blue' :
+														item.category === 'Science' ? 'green' : 'purple'
+													} 
+													borderRadius='full' 
+													size='sm'
+												/>
+											</Box>
+										))}
+										
+										<Divider my={2} />
+										
+										<Text fontWeight='bold'>Results Distribution</Text>
+										<HStack spacing={4} justifyContent='space-between'>
+											<VStack bg='green.900' borderRadius='md' p={4} flex={1} align='center'>
+												<Icon as={CheckIcon} color='green.400' boxSize={6} />
+												<Text fontWeight='bold'>{userData.verificationMetrics.byResult[0].count}</Text>
+												<Text>True Claims</Text>
+												<Badge colorScheme='green'>
+													{userData.verificationMetrics.byResult[0].percentage}%
+												</Badge>
+											</VStack>
+											
+											<VStack bg='red.900' borderRadius='md' p={4} flex={1} align='center'>
+												<Icon as={WarningIcon} color='red.400' boxSize={6} />
+												<Text fontWeight='bold'>{userData.verificationMetrics.byResult[1].count}</Text>
+												<Text>False Claims</Text>
+												<Badge colorScheme='red'>
+													{userData.verificationMetrics.byResult[1].percentage}%
+												</Badge>
+											</VStack>
+											
+											<VStack bg='yellow.900' borderRadius='md' p={4} flex={1} align='center'>
+												<Icon as={InfoIcon} color='yellow.400' boxSize={6} />
+												<Text fontWeight='bold'>{userData.verificationMetrics.byResult[2].count}</Text>
+												<Text>Misleading</Text>
+												<Badge colorScheme='yellow'>
+													{userData.verificationMetrics.byResult[2].percentage}%
+												</Badge>
+											</VStack>
+										</HStack>
+									</VStack>
+								</TabPanel>
+								
+								<TabPanel px={0}>
+									<VStack spacing={4} align='stretch'>
+										{userData.achievements.map((achievement, index) => (
+											<Card key={index} bg='navy.800'>
+												<CardBody>
+													<HStack spacing={4}>
+														<IconBox
+															bg='brand.800'
+															icon={<Icon as={achievement.icon} color='brand.300' h='24px' w='24px' />}
+															h='60px'
+															w='60px'
+														/>
+														<VStack align='start' spacing={0}>
+															<Text fontWeight='bold'>{achievement.name}</Text>
+															<Text fontSize='sm' color='gray.400'>{achievement.description}</Text>
+															<Badge colorScheme='brand' mt={1}>Earned {achievement.date}</Badge>
+														</VStack>
+													</HStack>
+												</CardBody>
+											</Card>
+										))}
+									</VStack>
+								</TabPanel>
+							</TabPanels>
+						</Tabs>
+					</CardHeader>
 				</Card>
 			</Grid>
 		</Flex>
 	);
 }
-
-export default Profile;

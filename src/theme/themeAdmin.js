@@ -2,6 +2,7 @@ import { extendTheme } from "@chakra-ui/react";
 import { globalStyles } from "./styles";
 import { bgAdmin } from "./bgAdmin";
 import { breakpoints } from "./foundations/breakpoints";
+import { typography } from "./foundations/typography";
 import { buttonStyles } from "./components/button";
 import { badgeStyles } from "./components/badge";
 import { linkStyles } from "./components/link";
@@ -18,6 +19,7 @@ export default extendTheme(
   { breakpoints }, // Breakpoints
   bgAdmin, // Global styles
   globalStyles, // Global styles
+  typography, // Typography styles
   buttonStyles, // Button styles
   badgeStyles, // Badge styles
   linkStyles, // Link styles

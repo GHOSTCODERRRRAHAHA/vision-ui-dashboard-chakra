@@ -21,7 +21,6 @@ import { ChakraProvider, Portal, useDisclosure } from "@chakra-ui/react";
 import Configurator from "components/Configurator/Configurator";
 import Footer from "components/Footer/Footer.js";
 // Layout components
-import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import React, { useState } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
@@ -116,7 +115,7 @@ export default function Dashboard(props) {
     <ChakraProvider theme={theme} resetCss={false}>
       <Sidebar
         routes={routes}
-        logoText={"VISION UI FREE"}
+        logoText={"ClarityX"}
         display='none'
         sidebarVariant={sidebarVariant}
         {...rest}
@@ -127,16 +126,6 @@ export default function Dashboard(props) {
           base: "100%",
           xl: "calc(100% - 275px)",
         }}>
-        <Portal>
-          <AdminNavbar
-            onOpen={onOpen}
-            logoText={"VISION UI FREE"}
-            brandText={getActiveRoute(routes)}
-            secondary={getActiveNavbar(routes)}
-            fixed={fixed}
-            {...rest}
-          />
-        </Portal>
         {getRoute() ? (
           <PanelContent>
             <PanelContainer>
@@ -148,13 +137,6 @@ export default function Dashboard(props) {
           </PanelContent>
         ) : null}
         <Footer />
-        <Portal>
-          <FixedPlugin
-            secondary={getActiveNavbar(routes)}
-            fixed={fixed}
-            onOpen={onOpen}
-          />
-        </Portal>
         <Configurator
           secondary={getActiveNavbar(routes)}
           isOpen={isOpen}

@@ -124,17 +124,6 @@ export const CreativeTimLogo = createIcon({
       </g>
     </g>
   ),
-
-  //   <chakra.svg
-  //   height="50px"
-  //   width="50px"
-  //   viewBox="0 0 100 100"
-  //   fill="none"
-  //   xmlns="http://www.w3.org/2000/svg"
-  //   color={fill}
-  //   {...props}
-  // >
-  // </chakra.svg>
 });
 
 export const CreditIcon = createIcon({
@@ -652,6 +641,68 @@ export const SimmmpleLogoWhite = createIcon({
         fill="white"
       />
     </svg>
+  ),
+});
+
+export const ClarityXLogo = createIcon({
+  displayName: "ClarityXLogo",
+  viewBox: "0 0 200 60",
+  path: (
+    <g>
+      <rect width="40" height="40" rx="8" fill="url(#clarityxGradient)" />
+      <path
+        d="M11 20L29 10C30 9.5 31 10.5 30.5 11.5L20 25C19.5 26 20 27 21 27H28C29 27 29.5 28 28.5 28.5L13 38.5C12 39 11 38 11.5 37L20 24C20.5 23 20 22 19 22H12C11 22 10.5 21 11 20Z"
+        fill="white"
+      />
+      <text 
+        x="50" 
+        y="28" 
+        fontSize="24" 
+        fontWeight="700" 
+        letterSpacing="0.5" 
+        fill="white"
+        opacity="0.95"
+      >
+        Clarity
+      </text>
+      <text 
+        x="130" 
+        y="28" 
+        fontSize="24" 
+        fontWeight="700" 
+        letterSpacing="0.5" 
+        fill="url(#textGradient)"
+      >
+        X
+      </text>
+      <defs>
+        <linearGradient id="clarityxGradient" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#444444" />
+          <stop offset="1" stopColor="#111111" />
+        </linearGradient>
+        <linearGradient id="textGradient" x1="130" y1="15" x2="145" y2="30" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#DDDDDD" />
+          <stop offset="1" stopColor="#999999" />
+        </linearGradient>
+      </defs>
+      <style>
+        {`
+        @keyframes pulse {
+          0% { opacity: 0.9; }
+          50% { opacity: 1; }
+          100% { opacity: 0.9; }
+        }
+        @keyframes float {
+          0% { transform: translateY(0px); }
+          50% { transform: translateY(-3px); }
+          100% { transform: translateY(0px); }
+        }
+        text {
+          animation: pulse 3s infinite ease-in-out;
+        }
+        `}
+      </style>
+    </g>
   ),
 });
 

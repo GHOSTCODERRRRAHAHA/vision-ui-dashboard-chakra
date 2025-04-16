@@ -57,6 +57,7 @@ import { AiFillCheckCircle } from 'react-icons/ai';
 import { BiHappy } from 'react-icons/bi';
 import { BsArrowRight } from 'react-icons/bs';
 import { IoCheckmarkDoneCircleSharp, IoEllipsisHorizontal } from 'react-icons/io5';
+import { FiCheckCircle, FiAlertTriangle, FiTrendingUp, FiUsers } from 'react-icons/fi';
 // Data
 import {
 	barChartDataDashboard,
@@ -211,7 +212,7 @@ export default function Dashboard() {
 								</Text>
 								<Text fontSize='md' color='gray.400' fontWeight='normal' mb='auto'>
 									Glad to see you again! <br />
-									Ask me anything.
+									I'm ClarityX AI, your fact-checking assistant.
 								</Text>
 								<Spacer />
 								<Flex align='center'>
@@ -219,7 +220,8 @@ export default function Dashboard() {
 										p='0px'
 										variant='no-hover'
 										bg='transparent'
-										my={{ sm: '1.5rem', lg: '0px' }}>
+										my={{ sm: '1.5rem', lg: '0px' }}
+										mr='10px'>
 										<Text
 											fontSize='sm'
 											color='#fff'
@@ -228,7 +230,7 @@ export default function Dashboard() {
 											transition='all .3s ease'
 											my={{ sm: '1.5rem', lg: '0px' }}
 											_hover={{ me: '4px' }}>
-											Tab to record
+											Ask ClarityX AI
 										</Text>
 										<Icon
 											as={BsArrowRight}
@@ -242,6 +244,14 @@ export default function Dashboard() {
 											pt='4px'
 											_hover={{ transform: 'translateX(20%)' }}
 										/>
+									</Button>
+									<Button
+										variant='brand'
+										p='8px 32px'
+										fontSize='sm'
+										fontWeight='bold'
+										my={{ sm: '1.5rem', lg: '0px' }}>
+										Fact Check Now
 									</Button>
 								</Flex>
 							</Flex>
@@ -606,6 +616,37 @@ export default function Dashboard() {
 					</CardBody>
 				</Card>
 			</Grid>
+			{/* Statistics */}
+			<SimpleGrid columns={{ sm: 1, md: 2, xl: 4 }} spacing='24px' mb='20px'>
+				<MiniStatistics
+					title={'Fact Checks'}
+					amount={'950'}
+					percentage={55}
+					icon={<Icon h={'24px'} w={'24px'} color='white' as={FiCheckCircle} />}
+					bgIcon={'linear-gradient(159.02deg, #24E8B8 14.25%, #0A9BE7 56.45%, #2222E9 86.14%)'}
+				/>
+				<MiniStatistics
+					title={'Misinformation Identified'}
+					amount={'367'}
+					percentage={5}
+					icon={<Icon h={'24px'} w={'24px'} color='white' as={FiAlertTriangle} />}
+					bgIcon={'linear-gradient(159.02deg, #FF667C 14.25%, #EA0606 56.45%, #7A0000 86.14%)'}
+				/>
+				<MiniStatistics
+					title={'Accuracy Rate'}
+					amount={'98.3%'}
+					percentage={20}
+					icon={<Icon h={'24px'} w={'24px'} color='white' as={FiTrendingUp} />}
+					bgIcon={'linear-gradient(159.02deg, #F6AD55 14.25%, #E07A5F 56.45%, #C84C09 86.14%)'}
+				/>
+				<MiniStatistics
+					title={'Community Size'}
+					amount={'2,300'}
+					percentage={30}
+					icon={<Icon h={'24px'} w={'24px'} color='white' as={FiUsers} />}
+					bgIcon={'linear-gradient(159.02deg, #9EB3FD 14.25%, #6D65EA 56.45%, #4433FF 86.14%)'}
+				/>
+			</SimpleGrid>
 		</Flex>
 	);
 }

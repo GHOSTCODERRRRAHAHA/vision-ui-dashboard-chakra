@@ -24,7 +24,17 @@ import RTLPage from "views/RTL/RTLPage.js";
 import Profile from "views/Dashboard/Profile.js";
 import SignIn from "views/Pages/SignIn.js";
 import SignUp from "views/Pages/SignUp.js";
+import WebsiteLogin from "views/Auth/WebsiteLogin.js";
+import AuthCallback from "views/Auth/AuthCallback.js";
 
+// New pages for fact-checking application
+import Scan from "views/Dashboard/Scan.js";
+import Community from "views/Dashboard/Community.js";
+import Leaderboard from "views/Dashboard/Leaderboard.js";
+import History from "views/Dashboard/History.js";
+import Settings from "views/Dashboard/Settings.js";
+
+// Import modern icons
 import {
   HomeIcon,
   StatsIcon,
@@ -33,7 +43,12 @@ import {
   DocumentIcon,
   RocketIcon,
   SupportIcon,
-} from "components/Icons/Icons";
+  ScanIcon,
+  CommunityIcon,
+  LeaderboardIcon,
+  HistoryIcon,
+  SettingsIcon
+} from "components/Icons/ModernIcons";
 
 var dashRoutes = [
   {
@@ -45,62 +60,66 @@ var dashRoutes = [
     layout: "/admin",
   },
   {
-    path: "/tables",
-    name: "Tables",
-    rtlName: "لوحة القيادة",
-    icon: <StatsIcon color='inherit' />,
-    component: Tables,
+    path: "/scan",
+    name: "Scan",
+    rtlName: "فحص",
+    icon: <ScanIcon color='inherit' />,
+    component: Scan,
     layout: "/admin",
   },
   {
-    path: "/billing",
-    name: "Billing",
-    rtlName: "لوحة القيادة",
-    icon: <CreditIcon color='inherit' />,
-    component: Billing,
+    path: "/community",
+    name: "Community",
+    rtlName: "مجتمع",
+    icon: <CommunityIcon color='inherit' />,
+    component: Community,
     layout: "/admin",
   },
   {
-    path: "/rtl-support-page",
-    name: "RTL",
-    rtlName: "آرتيإل",
-    icon: <SupportIcon color='inherit' />,
-    component: RTLPage,
-    layout: "/rtl",
+    path: "/leaderboard",
+    name: "Leaderboard",
+    rtlName: "لوحة المتصدرين",
+    icon: <LeaderboardIcon color='inherit' />,
+    component: Leaderboard,
+    layout: "/admin",
   },
   {
-    name: "ACCOUNT PAGES",
-    category: "account",
-    rtlName: "صفحات",
-    state: "pageCollapse",
-    views: [
-      {
-        path: "/profile",
-        name: "Profile",
-        rtlName: "لوحة القيادة",
-        icon: <PersonIcon color='inherit' />,
-        secondaryNavbar: true,
-        component: Profile,
-        layout: "/admin",
-      },
-      {
-        path: "/signin",
-        name: "Sign In",
-        rtlName: "لوحة القيادة",
-        icon: <DocumentIcon color='inherit' />,
-        component: SignIn,
-        layout: "/auth",
-      },
-      {
-        path: "/signup",
-        name: "Sign Up",
-        rtlName: "لوحة القيادة",
-        icon: <RocketIcon color='inherit' />,
-        secondaryNavbar: true,
-        component: SignUp,
-        layout: "/auth",
-      },
-    ],
+    path: "/history",
+    name: "History",
+    rtlName: "تاريخ",
+    icon: <HistoryIcon color='inherit' />,
+    component: History,
+    layout: "/admin",
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    rtlName: "لوحة القيادة",
+    icon: <PersonIcon color='inherit' />,
+    secondaryNavbar: true,
+    component: Profile,
+    layout: "/admin",
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    rtlName: "إعدادات",
+    icon: <SettingsIcon color='inherit' />,
+    component: Settings,
+    layout: "/admin",
+  },
+  {
+    path: "/login",
+    name: "Login",
+    rtlName: "تسجيل الدخول",
+    icon: <DocumentIcon color='inherit' />,
+    component: WebsiteLogin,
+    layout: "/auth",
+  },
+  {
+    path: "/callback",
+    component: AuthCallback,
+    layout: "/auth"
   },
 ];
 export default dashRoutes;
